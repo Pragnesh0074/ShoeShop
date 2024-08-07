@@ -1,4 +1,4 @@
-## ShoeShop MERN Stack Website: A Shoes Ordering WEbsite
+## ShoeShop MERN Stack Website: A Shoes Ordering Website
 
 **Introducing ShoeSHop**, A modern e-commerce platform for a shoe shop, leveraging the MERN stack to provide a seamless shopping experience. The website features a responsive React frontend for browsing products, an Express.js backend API for handling requests, MongoDB for efficient data storage, and Node.js to power the server-side operations.
 
