@@ -51,8 +51,14 @@ const LayoutWithAdminHeader = ({ children }) => {
 function App() {
   const [user, setUser] = useState(false);
   const [data, setData] = useState(null);
-  const [admin, setAdmin] = useState(false);
-  const [adminData, setAdminData] = useState(null);
+  const [admin, setAdmin] = useState(() => {
+    const storedAdmin = localStorage.getItem('admin');
+    return storedAdmin ? JSON.parse(storedAdmin) : false;
+  });
+  const [adminData, setAdminData] = useState(() => {
+    const storedAdminData = localStorage.getItem('adminData');
+    return storedAdminData ? JSON.parse(storedAdminData) : null;
+  });
 
   const fetchUser = async () => {
     try {
@@ -77,9 +83,31 @@ function App() {
   const fetchAdmin = async (admin, adminData) => {
     setAdmin(admin);
     setAdminData(adminData);
+    localStorage.setItem('admin', JSON.stringify(admin));
+    localStorage.setItem('adminData', JSON.stringify(adminData));
+  };
+
+  const checkAdminStatus = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/admin/check-status");
+      if (response.data.isLoggedIn) {
+        setAdmin(true);
+        setAdminData(response.data.adminData);
+        localStorage.setItem('admin', JSON.stringify(true));
+        localStorage.setItem('adminData', JSON.stringify(response.data.adminData));
+      } else {
+        setAdmin(false);
+        setAdminData(null);
+        localStorage.removeItem('admin');
+        localStorage.removeItem('adminData');
+      }
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+    }
   };
 
   useEffect(() => {
+    checkAdminStatus();
     fetchUser();
   }, []);
 
